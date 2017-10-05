@@ -1,7 +1,7 @@
-// filter_test.c
+// filter_ma_test.c
 
 #include <stdio.h>
-#include "filter.h"
+#include "filter_ma.h"
 
 
 #define f1_LENGTH 5

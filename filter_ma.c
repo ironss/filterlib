@@ -1,6 +1,6 @@
-// filter.c
+// filter_ma.c
 
-#include "filter.h"
+#include "filter_ma.h"
 
 
 void filter_ma_init(filter_ma_t * filter, const char * name, filter_sample_t * x_data, int length)

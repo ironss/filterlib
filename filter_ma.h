@@ -1,4 +1,4 @@
-// filter.h
+// filter_ma.h
 
 #include <stdint.h>
 
