@@ -1,6 +1,6 @@
 // filter_ma.c
 
-#include "filter_ma.h"
+#include "filter.h"
 
 
 void filter_ma_init(filter_ma_t * filter, const char * name, filter_sample_t * x_data, int length)
@@ -10,6 +10,7 @@ void filter_ma_init(filter_ma_t * filter, const char * name, filter_sample_t * x
     filter->length = length;
     filter->index_n = 0;
     filter->sum = 0;
+    filter->output = 0;
 }
 
 void filter_ma_update(filter_ma_t * filter, filter_sample_t x_n)

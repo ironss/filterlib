@@ -1,13 +1,14 @@
 // filter_ma_test.c
 
 #include <stdio.h>
-#include "filter_ma.h"
+#include "filter.h"
 
 
-#define f1_LENGTH 5
-filter_sample_t f1x[f1_LENGTH];
-filter_ma_t     f1;
+#define ma1_LENGTH 5
+filter_sample_t ma1_x[ma1_LENGTH];
+filter_ma_t     ma1;
 
+filter_splpf_t splpf1;
 
 int main(int argc, char * argv[])
 {
@@ -26,13 +27,34 @@ int main(int argc, char * argv[])
     };
     int samples_length = sizeof(samples) / sizeof(samples[0]);
 
-    filter_ma_init(&f1, "f1", f1x, f1_LENGTH);
-    
-    int i;
-    for (i = 0; i < samples_length; i++)
+#if 0
     {
-        filter_ma_update(&f1, samples[i]);
-        printf("%s: %ld %d\n", f1.name, f1.sum, f1.output);
+        filter_ma_init(&ma1, "ma1", ma1_x, ma1_LENGTH);
+        
+        int i;
+        for (i = 0; i < samples_length; i++)
+        {
+            filter_ma_update(&ma1, samples[i]);
+            
+            filter_ma_t * f = &ma1;
+            printf("%s: %ld %d\n", f->name, f->sum, ma1->output);
+        }
     }
+#endif
+
+#if 1
+    {
+        filter_splpf_init(&splpf1, "splpf1", 600, 1000);
+        
+        int i;
+        for (i = 0; i < samples_length; i++)
+        {
+            filter_splpf_update(&splpf1, samples[i]);
+            
+            filter_splpf_t * f = &splpf1;
+            printf("%s: %ld %d\n", f->name, f->sum, f->output);
+        }
+    }
+#endif
 }
 
