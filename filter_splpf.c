@@ -2,6 +2,7 @@
 
 #include "filter.h"
 
+
 void filter_splpf_init(filter_splpf_t * filter, const char * name, filter_sample_t num, filter_sample_t denom)
 {
     filter->name = name;
