@@ -1,6 +1,9 @@
 // filter_ma_test.c
 
+#include <check.h>
+
 #include <stdio.h>
+#include <stdlib.h>
 #include "filter.h"
 
 
@@ -13,10 +16,10 @@
 #define UNUSED(x) ((void)(x))
 
 
-int main(int argc, char * argv[])
-{
-	UNUSED(argc);
-	UNUSED(argv);
+//int main(int argc, char * argv[])
+//{
+//	UNUSED(argc);
+//	UNUSED(argv);
 
     filter_sample_t samples[] =
     {
@@ -87,7 +90,7 @@ int main(int argc, char * argv[])
     }
 #endif
 
-#if TEST_FILTER_IIR
+    START_TEST(test_iir)
     {
         #define iir1_LENGTH 5
         filter_sample_t iir1_x[iir1_LENGTH];
@@ -104,6 +107,38 @@ int main(int argc, char * argv[])
             printf("%s: %d\n", f->name, f->output);
         }
     }
-#endif
+    END_TEST
+
+//}
+
+
+Suite * iir_suite(void)
+{
+    Suite *s;
+    TCase *tc_core;
+
+    s = suite_create("test-iir");
+
+    /* Core test case */
+    tc_core = tcase_create("Core");
+
+    tcase_add_test(tc_core, test_iir);
+    suite_add_tcase(s, tc_core);
+
+    return s;
 }
 
+int main(void)
+{
+    int number_failed;
+    Suite *s;
+    SRunner *sr;
+
+    s = iir_suite();
+    sr = srunner_create(s);
+
+    srunner_run_all(sr, CK_NORMAL);
+    number_failed = srunner_ntests_failed(sr);
+    srunner_free(sr);
+    return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+}
