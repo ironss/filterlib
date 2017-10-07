@@ -3,25 +3,25 @@
 #include "filter.h"
 
 
-void filter_ma_init(filter_ma_t * filter, const char * name, filter_sample_t * x_data, int length)
+void filter_ma_init(filter_ma_t * flt, const char * name, filter_sample_t * x_data, int length)
 {
-    filter->name = name;
-    filter->x = x_data;
-    filter->length = length;
-    filter->index_n = 0;
-    filter->sum = 0;
-    filter->output = 0;
+    flt->name = name;
+    flt->x = x_data;
+    flt->length = length;
+    flt->index_n = 0;
+    flt->sum = 0;
+    flt->output = 0;
 }
 
-void filter_ma_update(filter_ma_t * filter, filter_sample_t x_n)
+void filter_ma_update(filter_ma_t * flt, filter_sample_t x_n)
 {
-    filter->sum = filter->sum + x_n - filter->x[filter->index_n];
-    filter->output = filter->sum / filter->length;
+    flt->sum = flt->sum + x_n - flt->x[flt->index_n];
+    flt->output = (filter_sample_t)(flt->sum / flt->length);
 
-    filter->x[filter->index_n] = x_n;
+    flt->x[flt->index_n] = x_n;
 
-    filter->index_n++;
-    if (filter->index_n >= filter->length)
-        filter->index_n = 0;
+    flt->index_n++;
+    if (flt->index_n >= flt->length)
+        flt->index_n = 0;
 }
 

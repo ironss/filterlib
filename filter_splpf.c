@@ -3,18 +3,18 @@
 #include "filter.h"
 
 
-void filter_splpf_init(filter_splpf_t * filter, const char * name, filter_sample_t num, filter_sample_t denom)
+void filter_splpf_init(filter_splpf_t * flt, const char * name, filter_sample_t alpha, filter_sample_t scale)
 {
-    filter->name = name;
-    filter->alpha_num = num;
-    filter->alpha_denom = denom;
-    filter->sum = 0;
-    filter->output = 0;
+    flt->name = name;
+    flt->alpha = alpha;
+    flt->scale = scale;
+    flt->output_scaled = 0;
+    flt->output = 0;
 }
 
-void filter_splpf_update(filter_splpf_t * filter, filter_sample_t x)
+void filter_splpf_update(filter_splpf_t * flt, filter_sample_t x)
 {
-    filter->sum = filter->sum + filter->alpha_num * (x - filter->output);
-    filter->output = filter->sum / filter->alpha_denom;
+    flt->output_scaled = flt->output_scaled + flt->alpha * (x - flt->output);
+    flt->output = (filter_sample_t)(flt->output_scaled / flt->scale);
 }
 
