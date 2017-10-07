@@ -10,10 +10,13 @@
 #define TEST_FILTER_IIR    1
 
 
+#define UNUSED(x) ((void)(x))
+
+
 int main(int argc, char * argv[])
 {
-	argc = argc;
-	argv = argv;
+	UNUSED(argc);
+	UNUSED(argv);
 
     filter_sample_t samples[] =
     {
