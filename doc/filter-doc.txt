@@ -1,0 +1,43 @@
+
+
+Raw value smoothing
+
+The calibration is very sensitive to noise; currently, it takes a single
+raw value sample for each of the calibration points, and uses those value
+to calculate the calibration values.
+
+We need to take more than one raw value for each calibration point: we need
+a filter.
+
+There are a few options for the filter:
+
+* Moving average filter
+
+* Recursive (IIR) filter
+
+
+
+Moving average filter
+=====================
+
+http://www.dspguide.com/ch15.htm
+
+A moving average filter is easy to implement and understand, and works
+well with integer arithmetic. It provides very good performance in 
+the time domain (noise is reduced, but step response is still good), 
+but poor frequency domain response. For weight measurement, we are not
+interested in the frequency characteristics of the signal.
+
+Integer overlow can be a problem, especially if the filter is long. Also,
+a numnber of sample points have to be stored and managed; this can be
+relatively timeconsuming.
+
+
+
+Recursive filter
+================
+
+http://www.dspguide.com/ch19.htm
+
+A simple one- or two-pole IIR filter is easy to implement. However, it is
+more difficult to 
