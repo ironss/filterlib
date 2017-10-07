@@ -18,13 +18,27 @@ const filter_sample_t samples[] =
 //        102, 101, 100, 101, 120, 100, 101, 102, 101, 100,
 //          0,   5,   0,   0,   0,  -15,   0,   0,   0,   3,
 //          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-	  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-	100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
-	100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
-	  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+};
+
+const filter_sample_t samples1[] =
+{
 	  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
 };
-int samples_length = sizeof(samples) / sizeof(samples[0]);
+int samples1_length = sizeof(samples1) / sizeof(samples1[0]);
+
+const filter_sample_t samples2[] =
+{
+    100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+    100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+};
+int samples2_length = sizeof(samples2) / sizeof(samples2[0]);
+
+const filter_sample_t samples3[] =
+{
+      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+};
+int samples3_length = sizeof(samples3) / sizeof(samples3[0]);
 
 
 START_TEST(test_ma)
@@ -35,15 +49,26 @@ START_TEST(test_ma)
 	filter_ma_init(&ma1, "ma1", ma1_x, ma1_LENGTH);
 
 	int i;
-	for (i = 0; i < samples_length; i++)
-	{
-		filter_ma_update(&ma1, samples[i]);
+	for (i = 0; i < samples1_length; i++)
+		filter_ma_update(&ma1, samples1[i]);
+	ck_assert_int_eq(ma1.output, 0);
 
-		filter_ma_t * f = &ma1;
-		printf("%s: %d\n", f->name, f->output);
-	}
+    for (i = 0; i < samples2_length; i++)
+    {
+        filter_ma_update(&ma1, samples2[i]);
+        printf("%s: %d\n", ma1.name, ma1.output);
+    }
+    ck_assert_int_eq(ma1.output, 100);
+
+    for (i = 0; i < samples3_length; i++)
+    {
+        filter_ma_update(&ma1, samples3[i]);
+        printf("%s: %d\n", ma1.name, ma1.output);
+    }
+    ck_assert_int_eq(ma1.output, 0);
 }
 END_TEST
+
 
 START_TEST(test_splpf)
 {
@@ -51,31 +76,54 @@ START_TEST(test_splpf)
 	filter_splpf_init(&splpf1, "splpf1", 500, 1000);
 
 	int i;
-	for (i = 0; i < samples_length; i++)
-	{
-		filter_splpf_update(&splpf1, samples[i]);
+	for (i = 0; i < samples1_length; i++)
+		filter_splpf_update(&splpf1, samples1[i]);
+	ck_assert_int_eq(splpf1.output, 0);
 
-		filter_splpf_t * f = &splpf1;
-		printf("%s: %d\n", f->name, f->output);
-	}
+    for (i = 0; i < samples2_length; i++)
+    {
+        filter_splpf_update(&splpf1, samples2[i]);
+        printf("%s: %d\n", splpf1.name, splpf1.output);
+    }
+
+    ck_assert_int_eq(splpf1.output, 100);
+
+    for (i = 0; i < samples3_length; i++)
+    {
+        filter_splpf_update(&splpf1, samples3[i]);
+        printf("%s: %d\n", splpf1.name, splpf1.output);
+    }
+    ck_assert_int_eq(splpf1.output, 0);
 }
 END_TEST
+
 
 START_TEST(test_hwdexp)
 {
 	filter_hwdexp_t hwdexp1;
-	filter_hwdexp_init(&hwdexp1, "hwdexp1", 500, 0, 10000);
+	filter_hwdexp_init(&hwdexp1, "hwdexp1", 600, 100, 1000);
 
 	int i;
-	for (i = 0; i < samples_length; i++)
-	{
-		filter_hwdexp_update(&hwdexp1, samples[i]);
+	for (i = 0; i < samples1_length; i++)
+		filter_hwdexp_update(&hwdexp1, samples1[i]);
+	ck_assert_int_eq(hwdexp1.output, 0);
 
-		filter_hwdexp_t * f = &hwdexp1;
-		printf("%s: %d\n", f->name, f->y_t);
-	}
+    for (i = 0; i < samples2_length; i++)
+    {
+        filter_hwdexp_update(&hwdexp1, samples2[i]);
+        printf("%s: %d\n", hwdexp1.name, hwdexp1.output);
+    }
+    ck_assert_int_eq(hwdexp1.output, 100);
+
+    for (i = 0; i < samples3_length; i++)
+    {
+        filter_hwdexp_update(&hwdexp1, samples3[i]);
+    printf("%s: %d\n", hwdexp1.name, hwdexp1.output);
+    }
+    ck_assert_int_eq(hwdexp1.output, 0);
 }
 END_TEST
+
 
 START_TEST(test_iir)
 {
@@ -86,18 +134,28 @@ START_TEST(test_iir)
 	filter_iir_init(&iir1, "iir1", iir1_x, iir1_y, filter_iir_cheby_4p04_a, filter_iir_cheby_4p04_b, 10000, iir1_LENGTH);
 
 	int i;
-	for (i = 0; i < samples_length; i++)
-	{
-		filter_iir_update(&iir1, samples[i]);
+	for (i = 0; i < samples1_length; i++)
+		filter_iir_update(&iir1, samples1[i]);
+	ck_assert_int_eq(iir1.output, 0);
 
-		filter_iir_t * f = &iir1;
-		printf("%s: %d\n", f->name, f->output);
-	}
+    for (i = 0; i < samples2_length; i++)
+    {
+        filter_iir_update(&iir1, samples2[i]);
+        printf("%s: %d\n", iir1.name, iir1.output);
+    }
+    ck_assert_int_eq(iir1.output, 100);
+
+    for (i = 0; i < samples3_length; i++)
+    {
+        filter_iir_update(&iir1, samples3[i]);
+        printf("%s: %d\n", iir1.name, iir1.output);
+    }
+    ck_assert_int_eq(iir1.output, -1);
 }
 END_TEST
 
 
-Suite * iir_suite(void)
+Suite * filter_suite(void)
 {
     Suite *s;
     TCase *tc_core;
@@ -122,7 +180,7 @@ int main(void)
     Suite *s;
     SRunner *sr;
 
-    s = iir_suite();
+    s = filter_suite();
     sr = srunner_create(s);
 
     srunner_set_fork_status(sr, CK_NOFORK);
