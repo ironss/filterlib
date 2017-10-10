@@ -1,11 +1,11 @@
 // filter_iir.c
 
+// Generic Infinite impulse response filter
+// See http://www.dspguide.com/ch19.htm
+
+
 #include "filter.h"
 
-
-//    |  a0  |  a1  |  a2  |
-//    | xn-2 | xn-1 |  xn  |
-//                      ^ most recent sample
 
 void filter_iir_init(filter_iir_t * flt, const char * name, filter_sample_t * x, filter_sample_t * y, const filter_sample_t * a, const filter_sample_t *b, filter_sample_t scale, int length)
 {
@@ -85,4 +85,3 @@ const filter_sample_t filter_iir_cheby_4p04_b[] =
 {
     0, -21612, -20340, -8789, -1611,  // scaled by 10000
 };
-

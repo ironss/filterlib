@@ -1,5 +1,9 @@
 // filter_hwdexp.c
 
+// Holt-Winters dual-exponential smoothing
+// See https://en.wikipedia.org/wiki/Exponential_smoothing
+
+
 #include "filter.h"
 
 
@@ -31,4 +35,3 @@ void filter_hwdexp_update(filter_hwdexp_t * flt, filter_sample_t x)
     
     flt->output = flt->y_t;
 }
-

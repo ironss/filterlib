@@ -1,5 +1,9 @@
 // filter_ma.c
 
+// Moving average filter
+// See http://www.dspguide.com/ch15.htm
+
+
 #include "filter.h"
 
 
@@ -24,4 +28,3 @@ void filter_ma_update(filter_ma_t * flt, filter_sample_t x_n)
     if (flt->index_n >= flt->length)
         flt->index_n = 0;
 }
-
