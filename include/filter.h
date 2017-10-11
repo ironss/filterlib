@@ -1,7 +1,12 @@
 // filter.h
 
-// Various filter type
+// Various filter types
 // See http://www.dspguide.com/pdfbook.htm for a discussion of general DSP principles and
+
+// The caller must calculate the various co-efficients.
+// The caller must provide storage for the historical values.
+// The caller must ensure that history storage is set to 
+// suitable values (eg. zero) before using the filter.
 
 
 #include <stdint.h>
@@ -76,12 +81,22 @@ typedef struct filter_iir {
     filter_sample_t * y;
     const filter_sample_t * a;
     const filter_sample_t * b;
-    filter_sample_t scale;
+    filter_sample_t gain;
     int length;
     int index_n;
 } filter_iir_t;
 
-void filter_iir_init(filter_iir_t * flt, const char * name, filter_sample_t * x, filter_sample_t * y, const filter_sample_t * a, const filter_sample_t * b, filter_sample_t scale, int length);
+
+typedef struct filter_iir_config {
+    int length;
+    filter_sample_t gain;
+    const filter_sample_t * a;
+    const filter_sample_t * b;
+} filter_iir_config_t;
+
+
+void filter_iir_init(filter_iir_t * flt, const char * name, filter_sample_t * x, filter_sample_t * y, const filter_sample_t * a, const filter_sample_t * b, filter_sample_t gain, int length);
+void filter_iir_init2(filter_iir_t * flt, const char * name, filter_sample_t * x, filter_sample_t * y, const filter_iir_config_t * config);
 void filter_iir_update(filter_iir_t * flt, filter_sample_t x_n);
 
 
@@ -97,3 +112,8 @@ extern const filter_sample_t filter_iir_cheby_4p03_a[];
 extern const filter_sample_t filter_iir_cheby_4p03_b[];
 extern const filter_sample_t filter_iir_cheby_4p04_a[];
 extern const filter_sample_t filter_iir_cheby_4p04_b[];
+
+extern const filter_iir_config_t filter_iir_cheby_4p01;
+extern const filter_iir_config_t filter_iir_cheby_4p02;
+extern const filter_iir_config_t filter_iir_cheby_4p03;
+extern const filter_iir_config_t filter_iir_cheby_4p04;

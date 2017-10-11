@@ -142,6 +142,35 @@ START_TEST(test_iir)
 END_TEST
 
 
+START_TEST(test_iir2)
+{
+    #define iir2_LENGTH 5
+    filter_sample_t iir2_x[iir2_LENGTH] = {};
+    filter_sample_t iir2_y[iir2_LENGTH] = {};
+    filter_iir_t    iir2;
+    filter_iir_init2(&iir2, "iir2", iir2_x, iir2_y, &filter_iir_cheby_4p04);
+
+    int i;
+    for (i = 0; i < samples1_length; i++)
+        filter_iir_update(&iir2, samples1[i]);
+    ck_assert_int_eq(iir2.output, 0);
+
+    for (i = 0; i < samples2_length; i++)
+    {
+        filter_iir_update(&iir2, samples2[i]);
+        printf("%s: %d\n", iir2.name, iir2.output);
+    }
+    ck_assert_int_eq(iir2.output, 100);
+
+    for (i = 0; i < samples3_length; i++)
+    {
+        filter_iir_update(&iir2, samples3[i]);
+        printf("%s: %d\n", iir2.name, iir2.output);
+    }
+    ck_assert_int_eq(iir2.output, -1);
+}
+END_TEST
+
 Suite * filter_suite(void)
 {
     Suite *s;
@@ -156,6 +185,7 @@ Suite * filter_suite(void)
     tcase_add_test(tc_core, test_splpf);
     tcase_add_test(tc_core, test_hwdexp);
     tcase_add_test(tc_core, test_iir);
+    tcase_add_test(tc_core, test_iir2);
     suite_add_tcase(s, tc_core);
 
     return s;
