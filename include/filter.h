@@ -95,23 +95,14 @@ typedef struct filter_iir_config {
 } filter_iir_config_t;
 
 
-void filter_iir_init(filter_iir_t * flt, const char * name, filter_sample_t * x, filter_sample_t * y, const filter_sample_t * a, const filter_sample_t * b, filter_sample_t gain, int length);
-void filter_iir_init2(filter_iir_t * flt, const char * name, filter_sample_t * x, filter_sample_t * y, const filter_iir_config_t * config);
+void filter_iir_init(filter_iir_t * flt, const char * name, filter_sample_t * x, filter_sample_t * y, const filter_iir_config_t * config);
+void filter_iir_initall(filter_iir_t * flt, const char * name, filter_sample_t * x, filter_sample_t * y, const filter_sample_t * a, const filter_sample_t * b, filter_sample_t gain, int length);
 void filter_iir_update(filter_iir_t * flt, filter_sample_t x_n);
 
 
 // Coefficients for various different types of IIR filters
 // 4-pole Chebyshev filters at various cutoff frequencies
 // See http://www.dspguide.com/ch20
-
-extern const filter_sample_t filter_iir_cheby_4p01_a[];
-extern const filter_sample_t filter_iir_cheby_4p01_b[];
-extern const filter_sample_t filter_iir_cheby_4p02_a[];
-extern const filter_sample_t filter_iir_cheby_4p02_b[];
-extern const filter_sample_t filter_iir_cheby_4p03_a[];
-extern const filter_sample_t filter_iir_cheby_4p03_b[];
-extern const filter_sample_t filter_iir_cheby_4p04_a[];
-extern const filter_sample_t filter_iir_cheby_4p04_b[];
 
 extern const filter_iir_config_t filter_iir_cheby_4p01;
 extern const filter_iir_config_t filter_iir_cheby_4p02;
