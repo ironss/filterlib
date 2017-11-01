@@ -60,7 +60,7 @@ END_TEST
 START_TEST(test_splpf)
 {
 	filter_splpf_t splpf1;
-	filter_splpf_init(&splpf1, "splpf1", 500, 1000);
+	filter_splpf_init(&splpf1, "splpf1", 300, 1000);
 
 	int i;
 	for (i = 0; i < samples1_length; i++)
@@ -105,7 +105,7 @@ START_TEST(test_hwdexp)
     for (i = 0; i < samples3_length; i++)
     {
         filter_hwdexp_update(&hwdexp1, samples3[i]);
-    printf("%s: %d\n", hwdexp1.name, hwdexp1.output);
+        printf("%s: %d\n", hwdexp1.name, hwdexp1.output);
     }
     ck_assert_int_eq(hwdexp1.output, 0);
 }
@@ -141,6 +141,58 @@ START_TEST(test_iir2)
 }
 END_TEST
 
+
+START_TEST(test_splpf_iir)
+{
+    filter_splpf_t splpf3;
+    filter_splpf_init(&splpf3, "splpf3", 250, 1000);
+
+    #define iir3_LENGTH 2
+    filter_sample_t iir3_x[iir2_LENGTH] = {};
+    filter_sample_t iir3_y[iir2_LENGTH] = {};
+    const filter_iir_config_t filter_iir_splpf_0_2 =
+    {
+        2,
+        1000,
+        (filter_sample_t [2]){ 250, 0, },
+        (filter_sample_t [2]){ 0, 750, },
+    };
+
+    filter_iir_t    iir3;
+    filter_iir_init(&iir3, "iir3", iir3_x, iir3_y, &filter_iir_splpf_0_2);
+
+
+
+    int i;
+    for (i = 0; i < samples1_length; i++)
+    {
+        filter_splpf_update(&splpf3, samples1[i]);
+        filter_iir_update(&iir3, samples1[i]);
+    }
+    ck_assert_int_eq(splpf3.output, 0);
+    ck_assert_int_eq(iir3.output, 0);
+
+    for (i = 0; i < samples2_length; i++)
+    {
+        filter_splpf_update(&splpf3, samples2[i]);
+        filter_iir_update(&iir3, samples2[i]);
+        printf("%s: %d   %s: %d\n", splpf3.name, splpf3.output, iir3.name, iir3.output);
+    }
+    ck_assert_int_eq(splpf3.output, 100);
+    ck_assert_int_eq(iir3.output, 97);  // This is an expected failure
+
+    for (i = 0; i < samples3_length; i++)
+    {
+        filter_splpf_update(&splpf3, samples3[i]);
+        filter_iir_update(&iir3, samples3[i]);
+        printf("%s: %d   %s: %d\n", splpf3.name, splpf3.output, iir3.name, iir3.output);
+    }
+    ck_assert_int_eq(splpf3.output, 0);
+    ck_assert_int_eq(iir3.output, 0);
+}
+END_TEST
+
+
 Suite * filter_suite(void)
 {
     Suite *s;
@@ -155,6 +207,7 @@ Suite * filter_suite(void)
     tcase_add_test(tc_core, test_splpf);
     tcase_add_test(tc_core, test_hwdexp);
     tcase_add_test(tc_core, test_iir2);
+    tcase_add_test(tc_core, test_splpf_iir);
     suite_add_tcase(s, tc_core);
 
     return s;
