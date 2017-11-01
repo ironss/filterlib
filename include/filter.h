@@ -49,6 +49,26 @@ void filter_splpf_init(filter_splpf_t * filter, const char * name, filter_sample
 void filter_splpf_update(filter_splpf_t * filter, filter_sample_t x_n);
 
 
+// Single-pole high-pass filter
+// See http://www.dspguide.com/ch19.htm
+
+typedef struct filter_sphpf {
+    const char * name;
+    filter_sample_t output;
+
+    filter_sample_t A0;
+    filter_sample_t A1;
+    filter_sample_t B1;
+    filter_sample_t scale;
+    filter_sample_t x_n1;
+
+    filter_intermediate_t output_scaled;
+} filter_sphpf_t;
+
+void filter_sphpf_init(filter_sphpf_t * filter, const char * name, filter_sample_t alpha, filter_sample_t scale);
+void filter_sphpf_update(filter_sphpf_t * filter, filter_sample_t x_n);
+
+
 // Holt-Winters dual-exponential smoothing
 // See https://en.wikipedia.org/wiki/Exponential_smoothing
 

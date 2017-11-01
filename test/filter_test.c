@@ -85,6 +85,34 @@ START_TEST(test_splpf)
 END_TEST
 
 
+START_TEST(test_sphpf)
+{
+    filter_sphpf_t sphpf1;
+    filter_sphpf_init(&sphpf1, "sphpf1", 800, 1000);
+
+    int i;
+    for (i = 0; i < samples1_length; i++)
+        filter_sphpf_update(&sphpf1, samples1[i]);
+    ck_assert_int_eq(sphpf1.output, 0);
+
+    for (i = 0; i < samples2_length; i++)
+    {
+        filter_sphpf_update(&sphpf1, samples2[i]);
+        printf("%s: %d\n", sphpf1.name, sphpf1.output);
+    }
+
+    ck_assert_int_eq(sphpf1.output, 0);
+
+    for (i = 0; i < samples3_length; i++)
+    {
+        filter_sphpf_update(&sphpf1, samples3[i]);
+        printf("%s: %d\n", sphpf1.name, sphpf1.output);
+    }
+    ck_assert_int_eq(sphpf1.output, 0);
+}
+END_TEST
+
+
 START_TEST(test_hwdexp)
 {
 	filter_hwdexp_t hwdexp1;
@@ -205,6 +233,7 @@ Suite * filter_suite(void)
 
     tcase_add_test(tc_core, test_ma);
     tcase_add_test(tc_core, test_splpf);
+    tcase_add_test(tc_core, test_sphpf);
     tcase_add_test(tc_core, test_hwdexp);
     tcase_add_test(tc_core, test_iir2);
     tcase_add_test(tc_core, test_splpf_iir);
