@@ -178,7 +178,7 @@ START_TEST(test_splpf_iir)
     #define iir3_LENGTH 2
     filter_sample_t iir3_x[iir2_LENGTH] = {};
     filter_sample_t iir3_y[iir2_LENGTH] = {};
-    const filter_iir_config_t filter_iir_splpf_0_2 =
+    const filter_iir_config_t filter_iir_splpf_0_75 =
     {
         2,
         1000,
@@ -187,9 +187,7 @@ START_TEST(test_splpf_iir)
     };
 
     filter_iir_t    iir3;
-    filter_iir_init(&iir3, "iir3", iir3_x, iir3_y, &filter_iir_splpf_0_2);
-
-
+    filter_iir_init(&iir3, "iir3", iir3_x, iir3_y, &filter_iir_splpf_0_75);
 
     int i;
     for (i = 0; i < samples1_length; i++)
@@ -221,6 +219,55 @@ START_TEST(test_splpf_iir)
 END_TEST
 
 
+START_TEST(test_sphpf_iir)
+{
+    filter_sphpf_t sphpf4;
+    filter_sphpf_init(&sphpf4, "sphpf4", 750, 1000);
+
+    #define iir4_LENGTH 2
+    filter_sample_t iir4_x[iir2_LENGTH] = {};
+    filter_sample_t iir4_y[iir2_LENGTH] = {};
+    const filter_iir_config_t filter_iir_sphpf_0_75 =
+    {
+        2,
+        1000,
+        (filter_sample_t [2]){ 825, -825, },
+        (filter_sample_t [2]){ 0, 750, },
+    };
+
+    filter_iir_t    iir4;
+    filter_iir_init(&iir4, "iir4", iir4_x, iir4_y, &filter_iir_sphpf_0_75);
+
+    int i;
+    for (i = 0; i < samples1_length; i++)
+    {
+        filter_sphpf_update(&sphpf4, samples1[i]);
+        filter_iir_update(&iir4, samples1[i]);
+    }
+    ck_assert_int_eq(sphpf4.output, 0);
+    ck_assert_int_eq(iir4.output, 0);
+
+    for (i = 0; i < samples2_length; i++)
+    {
+        filter_sphpf_update(&sphpf4, samples2[i]);
+        filter_iir_update(&iir4, samples2[i]);
+        printf("%s: %d   %s: %d\n", sphpf4.name, sphpf4.output, iir4.name, iir4.output);
+    }
+    ck_assert_int_eq(sphpf4.output, 0);
+    ck_assert_int_eq(iir4.output, 0);
+
+    for (i = 0; i < samples3_length; i++)
+    {
+        filter_sphpf_update(&sphpf4, samples3[i]);
+        filter_iir_update(&iir4, samples3[i]);
+        printf("%s: %d   %s: %d\n", sphpf4.name, sphpf4.output, iir4.name, iir4.output);
+    }
+    ck_assert_int_eq(sphpf4.output, 0);
+    ck_assert_int_eq(iir4.output, 0);
+}
+END_TEST
+
+
 Suite * filter_suite(void)
 {
     Suite *s;
@@ -237,6 +284,7 @@ Suite * filter_suite(void)
     tcase_add_test(tc_core, test_hwdexp);
     tcase_add_test(tc_core, test_iir2);
     tcase_add_test(tc_core, test_splpf_iir);
+    tcase_add_test(tc_core, test_sphpf_iir);
     suite_add_tcase(s, tc_core);
 
     return s;
