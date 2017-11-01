@@ -60,7 +60,7 @@ END_TEST
 START_TEST(test_splpf)
 {
 	filter_splpf_t splpf1;
-	filter_splpf_init(&splpf1, "splpf1", 300, 1000);
+	filter_splpf_init(&splpf1, "splpf1", 700, 1000);
 
 	int i;
 	for (i = 0; i < samples1_length; i++)
@@ -145,7 +145,7 @@ END_TEST
 START_TEST(test_splpf_iir)
 {
     filter_splpf_t splpf3;
-    filter_splpf_init(&splpf3, "splpf3", 250, 1000);
+    filter_splpf_init(&splpf3, "splpf3", 750, 1000);
 
     #define iir3_LENGTH 2
     filter_sample_t iir3_x[iir2_LENGTH] = {};

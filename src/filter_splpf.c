@@ -10,7 +10,7 @@
 void filter_splpf_init(filter_splpf_t * flt, const char * name, filter_sample_t alpha, filter_sample_t scale)
 {
     flt->name = name;
-    flt->alpha = alpha;
+    flt->alpha = (filter_sample_t)(scale - alpha);
     flt->scale = scale;
     flt->output_scaled = 0;
     flt->output = 0;
